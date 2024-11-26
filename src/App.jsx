@@ -12,16 +12,11 @@ const LetterLearningApp = () => {
   const letterScrollRef = useRef(null);
 
   useEffect(() => {
+    // Lock scrolling but don't use fixed position
     document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    document.body.style.height = '100%';
     
     return () => {
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.height = '';
     };
   }, []);
 
@@ -82,14 +77,13 @@ const LetterLearningApp = () => {
   }, [currentLetterIndex]);
 
   return (
-    <div className="h-screen w-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen h-full w-screen bg-gray-50 flex flex-col overflow-hidden">
       <div 
-        className="flex-1 flex items-center justify-center relative"
+        className="flex-1 flex items-center justify-center relative min-h-0"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Control arrows only visible on desktop */}
         <button 
           onClick={previousLetter}
           disabled={currentLetterIndex === 0}
@@ -104,8 +98,8 @@ const LetterLearningApp = () => {
             className="font-bold transition-colors duration-300 select-none leading-none"
             style={{ 
               color: selectedColor,
-              fontSize: 'min(85vw, 85vh)',
-              opacity: touchEnd ? '0.8' : '1', // Visual feedback during swipe
+              fontSize: 'min(80vw, 70vh)',
+              opacity: touchEnd ? '0.8' : '1',
               transform: touchEnd ? `translateX(${(touchEnd - touchStart) * 0.1}px)` : 'translateX(0)',
               transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
             }}
@@ -124,14 +118,14 @@ const LetterLearningApp = () => {
         </button>
       </div>
 
-      <div className="w-full bg-white p-4 shadow-lg">
+      <div className="w-full bg-white py-3 px-2 sm:p-4 shadow-lg">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-center gap-2 sm:gap-4 mb-4">
+          <div className="flex justify-center gap-3 mb-3 sm:mb-4">
             {colors.map((color) => (
               <button
                 key={color}
                 onClick={() => setSelectedColor(color)}
-                className="w-8 h-8 sm:w-12 sm:h-12 rounded-full shadow-md transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                className="w-10 h-10 rounded-full shadow-md transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 flex-shrink-0"
                 style={{
                   backgroundColor: color,
                   transform: selectedColor === color ? 'scale(1.1)' : 'scale(1)',
@@ -156,16 +150,16 @@ const LetterLearningApp = () => {
               className="overflow-x-auto scrollbar-hide mx-auto lg:mx-12 w-full"
             >
               <div 
-                className="flex gap-2 pb-2 min-w-min sm:justify-between"
+                className="flex gap-2 pb-1 sm:pb-2 min-w-min sm:justify-between"
                 style={{ scrollBehavior: 'smooth' }}
               >
                 {alphabet.map((letter, index) => (
                   <button
                     key={letter}
                     onClick={() => setCurrentLetterIndex(index)}
-                    className={`flex-shrink-0 w-12 h-12 rounded-xl text-xl font-bold shadow-md transition-all duration-200 flex items-center justify-center
+                    className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl text-lg sm:text-xl font-bold shadow-sm transition-all duration-200 flex items-center justify-center
                       ${currentLetterIndex === index 
-                        ? 'bg-blue-500 text-white scale-110' 
+                        ? 'bg-blue-500 text-white scale-105 shadow-md' 
                         : 'bg-white text-gray-700 hover:bg-gray-100'}`}
                     aria-label={`Select letter ${letter}`}
                     aria-pressed={currentLetterIndex === index}
