@@ -5,7 +5,7 @@ const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 // Updated colors to represent common objects babies learn:
 // Black (default), Red (apple), Green (leaf), Blue (sky), 
 // Yellow (banana), Pink (flower), Purple (grape), Orange (orange)
-const colors = ['#000000', '#FFB3B3', '#A8E6CF', '#AEC6CF', '#FFE5B4', '#FFCAD4', '#E0BBE4', '#FEC89A'];
+const colors = ['#000000', '#FF6C6C', '#7BDC9D', '#568AD2', '#FFC532', '#FF87B7', '#C57AE6', '#FF7E0F'];
 
 const LetterLearningApp = () => {
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
