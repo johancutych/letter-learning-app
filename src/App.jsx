@@ -68,10 +68,9 @@ const LetterLearningApp = () => {
   }, [currentLetterIndex]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Main letter display */}
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <div 
-        className="h-[80vh] min-h-[500px] flex items-center justify-center relative"
+        className="flex-1 flex items-center justify-center relative h-[80vh] min-h-[500px]"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -79,9 +78,10 @@ const LetterLearningApp = () => {
         <button 
           onClick={previousLetter}
           disabled={currentLetterIndex === 0}
-          className="absolute left-2 sm:left-8 p-2 text-gray-500 disabled:opacity-30 z-10"
+          className="absolute left-2 sm:left-8 p-2 text-gray-500 disabled:opacity-30 z-10 hover:text-gray-700 transition-colors"
+          aria-label="Previous letter"
         >
-          <ChevronLeft size={48} />
+          <ChevronLeft className="w-12 h-12" />
         </button>
         
         <div className="text-center max-h-full flex items-center justify-center px-16">
@@ -99,17 +99,16 @@ const LetterLearningApp = () => {
         <button 
           onClick={nextLetter}
           disabled={currentLetterIndex === alphabet.length - 1}
-          className="absolute right-2 sm:right-8 p-2 text-gray-500 disabled:opacity-30 z-10"
+          className="absolute right-2 sm:right-8 p-2 text-gray-500 disabled:opacity-30 z-10 hover:text-gray-700 transition-colors"
+          aria-label="Next letter"
         >
-          <ChevronRight size={48} />
+          <ChevronRight className="w-12 h-12" />
         </button>
       </div>
 
-      {/* Controls section */}
       <div className="w-full bg-white p-4 shadow-lg">
         <div className="max-w-7xl mx-auto">
-          {/* Color selection */}
-          <div className="flex justify-center flex-wrap gap-2 sm:gap-4 mb-4">
+          <div className="flex justify-center gap-2 sm:gap-4 mb-4">
             {colors.map((color) => (
               <button
                 key={color}
@@ -120,27 +119,23 @@ const LetterLearningApp = () => {
                   transform: selectedColor === color ? 'scale(1.1)' : 'scale(1)',
                   border: color === '#000000' ? '2px solid #e5e5e5' : 'none'
                 }}
+                aria-label={`Select color ${color}`}
               />
             ))}
           </div>
 
-          {/* Letter selection with navigation arrows */}
           <div className="relative flex items-center max-w-full">
             <button 
               onClick={() => scrollLetters(-1)}
               className="hidden sm:block absolute left-0 z-10 p-2 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md"
+              aria-label="Scroll letters left"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft className="w-6 h-6" />
             </button>
 
             <div 
               ref={letterScrollRef}
-              className="overflow-x-auto mx-auto sm:mx-12 w-full"
-              style={{
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
-                '::-webkit-scrollbar': { display: 'none' }
-              }}
+              className="overflow-x-auto scrollbar-hide mx-auto sm:mx-12 w-full"
             >
               <div 
                 className="flex gap-1 pb-2 min-w-min sm:justify-between"
@@ -150,10 +145,12 @@ const LetterLearningApp = () => {
                   <button
                     key={letter}
                     onClick={() => setCurrentLetterIndex(index)}
-                    className={`flex-shrink-0 w-10 h-10 rounded-lg text-lg font-bold shadow transition-colors
+                    className={`flex-shrink-0 w-10 h-10 rounded-lg text-lg font-bold shadow-md transition-colors
                       ${currentLetterIndex === index 
                         ? 'bg-blue-500 text-white' 
                         : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+                    aria-label={`Select letter ${letter}`}
+                    aria-pressed={currentLetterIndex === index}
                   >
                     {letter}
                   </button>
@@ -164,8 +161,9 @@ const LetterLearningApp = () => {
             <button 
               onClick={() => scrollLetters(1)}
               className="hidden sm:block absolute right-0 z-10 p-2 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md"
+              aria-label="Scroll letters right"
             >
-              <ChevronRight size={24} />
+              <ChevronRight className="w-6 h-6" />
             </button>
           </div>
         </div>
