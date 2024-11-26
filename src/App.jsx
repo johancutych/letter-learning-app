@@ -11,20 +11,12 @@ const LetterLearningApp = () => {
   const [touchEnd, setTouchEnd] = useState(null);
   const letterScrollRef = useRef(null);
 
-  useEffect(() => {
-    // Lock scrolling but don't use fixed position
-    document.body.style.overflow = 'hidden';
-    
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
-
   const handleTouchStart = (e) => {
     setTouchStart(e.touches[0].clientX);
   };
 
   const handleTouchMove = (e) => {
+    e.preventDefault(); // Prevent default only for the letter area
     setTouchEnd(e.touches[0].clientX);
   };
 
@@ -77,106 +69,113 @@ const LetterLearningApp = () => {
   }, [currentLetterIndex]);
 
   return (
-    <div className="min-h-screen h-full w-screen bg-gray-50 flex flex-col overflow-hidden">
-      <div 
-        className="flex-1 flex items-center justify-center relative min-h-0"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <button 
-          onClick={previousLetter}
-          disabled={currentLetterIndex === 0}
-          className="hidden lg:block absolute left-2 sm:left-8 p-2 text-gray-500 disabled:opacity-30 z-10 hover:text-gray-700 transition-colors"
-          aria-label="Previous letter"
+    <div className="w-screen overflow-hidden" style={{ 
+      height: '100dvh',
+      /* Fallbacks for browsers that don't support dvh */
+      minHeight: '100vh',
+      minHeight: '-webkit-fill-available'
+    }}>
+      <div className="h-full w-full bg-gray-50 flex flex-col">
+        <div 
+          className="flex-1 flex items-center justify-center relative"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          <ChevronLeft className="w-12 h-12" />
-        </button>
-        
-        <div className="text-center flex items-center justify-center px-4 lg:px-16">
-          <h1 
-            className="font-bold transition-colors duration-300 select-none leading-none"
-            style={{ 
-              color: selectedColor,
-              fontSize: 'min(80vw, 70vh)',
-              opacity: touchEnd ? '0.8' : '1',
-              transform: touchEnd ? `translateX(${(touchEnd - touchStart) * 0.1}px)` : 'translateX(0)',
-              transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
-            }}
+          <button 
+            onClick={previousLetter}
+            disabled={currentLetterIndex === 0}
+            className="hidden lg:block absolute left-2 sm:left-8 p-2 text-gray-500 disabled:opacity-30 z-10 hover:text-gray-700 transition-colors"
+            aria-label="Previous letter"
           >
-            {alphabet[currentLetterIndex]}
-          </h1>
-        </div>
-
-        <button 
-          onClick={nextLetter}
-          disabled={currentLetterIndex === alphabet.length - 1}
-          className="hidden lg:block absolute right-2 sm:right-8 p-2 text-gray-500 disabled:opacity-30 z-10 hover:text-gray-700 transition-colors"
-          aria-label="Next letter"
-        >
-          <ChevronRight className="w-12 h-12" />
-        </button>
-      </div>
-
-      <div className="w-full bg-white py-3 px-2 sm:p-4 shadow-lg">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-center gap-3 mb-3 sm:mb-4">
-            {colors.map((color) => (
-              <button
-                key={color}
-                onClick={() => setSelectedColor(color)}
-                className="w-10 h-10 rounded-full shadow-md transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 flex-shrink-0"
-                style={{
-                  backgroundColor: color,
-                  transform: selectedColor === color ? 'scale(1.1)' : 'scale(1)',
-                  border: color === '#000000' ? '2px solid #e5e5e5' : 'none'
-                }}
-                aria-label={`Select color ${color}`}
-              />
-            ))}
+            <ChevronLeft className="w-12 h-12" />
+          </button>
+          
+          <div className="text-center flex items-center justify-center px-4 lg:px-16">
+            <h1 
+              className="font-bold transition-colors duration-300 select-none leading-none"
+              style={{ 
+                color: selectedColor,
+                fontSize: 'min(80vw, 60vh)',
+                opacity: touchEnd ? '0.8' : '1',
+                transform: touchEnd ? `translateX(${(touchEnd - touchStart) * 0.1}px)` : 'translateX(0)',
+                transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+              }}
+            >
+              {alphabet[currentLetterIndex]}
+            </h1>
           </div>
 
-          <div className="relative flex items-center max-w-full">
-            <button 
-              onClick={() => scrollLetters(-1)}
-              className="hidden lg:block absolute left-0 z-10 p-2 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md"
-              aria-label="Scroll letters left"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+          <button 
+            onClick={nextLetter}
+            disabled={currentLetterIndex === alphabet.length - 1}
+            className="hidden lg:block absolute right-2 sm:right-8 p-2 text-gray-500 disabled:opacity-30 z-10 hover:text-gray-700 transition-colors"
+            aria-label="Next letter"
+          >
+            <ChevronRight className="w-12 h-12" />
+          </button>
+        </div>
 
-            <div 
-              ref={letterScrollRef}
-              className="overflow-x-auto scrollbar-hide mx-auto lg:mx-12 w-full"
-            >
-              <div 
-                className="flex gap-2 pb-1 sm:pb-2 min-w-min sm:justify-between"
-                style={{ scrollBehavior: 'smooth' }}
-              >
-                {alphabet.map((letter, index) => (
-                  <button
-                    key={letter}
-                    onClick={() => setCurrentLetterIndex(index)}
-                    className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl text-lg sm:text-xl font-bold shadow-sm transition-all duration-200 flex items-center justify-center
-                      ${currentLetterIndex === index 
-                        ? 'bg-blue-500 text-white scale-105 shadow-md' 
-                        : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                    aria-label={`Select letter ${letter}`}
-                    aria-pressed={currentLetterIndex === index}
-                  >
-                    {letter}
-                  </button>
-                ))}
-              </div>
+        <div className="w-full bg-white pt-2 pb-4 px-2 sm:p-4 shadow-lg">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-center gap-3 mb-3">
+              {colors.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-md transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 flex-shrink-0"
+                  style={{
+                    backgroundColor: color,
+                    transform: selectedColor === color ? 'scale(1.1)' : 'scale(1)',
+                    border: color === '#000000' ? '2px solid #e5e5e5' : 'none'
+                  }}
+                  aria-label={`Select color ${color}`}
+                />
+              ))}
             </div>
 
-            <button 
-              onClick={() => scrollLetters(1)}
-              className="hidden lg:block absolute right-0 z-10 p-2 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md"
-              aria-label="Scroll letters right"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
+            <div className="relative flex items-center max-w-full">
+              <button 
+                onClick={() => scrollLetters(-1)}
+                className="hidden lg:block absolute left-0 z-10 p-2 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md"
+                aria-label="Scroll letters left"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              <div 
+                ref={letterScrollRef}
+                className="overflow-x-auto scrollbar-hide mx-auto lg:mx-12 w-full"
+              >
+                <div 
+                  className="flex gap-2 pb-1 min-w-min sm:justify-between"
+                  style={{ scrollBehavior: 'smooth' }}
+                >
+                  {alphabet.map((letter, index) => (
+                    <button
+                      key={letter}
+                      onClick={() => setCurrentLetterIndex(index)}
+                      className={`flex-shrink-0 w-9 h-9 sm:w-11 sm:h-11 rounded-xl text-lg sm:text-xl font-bold shadow-sm transition-all duration-200 flex items-center justify-center
+                        ${currentLetterIndex === index 
+                          ? 'bg-blue-500 text-white scale-105 shadow-md' 
+                          : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+                      aria-label={`Select letter ${letter}`}
+                      aria-pressed={currentLetterIndex === index}
+                    >
+                      {letter}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button 
+                onClick={() => scrollLetters(1)}
+                className="hidden lg:block absolute right-0 z-10 p-2 text-gray-500 hover:text-gray-700 bg-white rounded-full shadow-md"
+                aria-label="Scroll letters right"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
