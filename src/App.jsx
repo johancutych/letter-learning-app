@@ -2,7 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Shuffle } from 'lucide-react';
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-const colors = ['#000000', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6'];
+// Updated colors to represent common objects babies learn:
+// Black (default), Red (apple), Green (leaf), Blue (sky), 
+// Yellow (banana), Pink (flower), Purple (grape), Orange (orange)
+const colors = ['#000000', '#FFB3B3', '#A8E6CF', '#AEC6CF', '#FFE5B4', '#FFCAD4', '#E0BBE4', '#FEC89A'];
 
 const LetterLearningApp = () => {
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
@@ -11,12 +14,14 @@ const LetterLearningApp = () => {
   const [touchEnd, setTouchEnd] = useState(null);
   const letterScrollRef = useRef(null);
   const isInitialMount = useRef(true);
+  const [shouldScroll, setShouldScroll] = useState(false);
 
   const handleMix = () => {
     const randomLetterIndex = Math.floor(Math.random() * alphabet.length);
     const randomColorIndex = Math.floor(Math.random() * colors.length);
     setCurrentLetterIndex(randomLetterIndex);
     setSelectedColor(colors[randomColorIndex]);
+    setShouldScroll(true);
   };
 
   useEffect(() => {
@@ -53,9 +58,11 @@ const LetterLearningApp = () => {
 
     if (isLeftSwipe && currentLetterIndex < alphabet.length - 1) {
       setCurrentLetterIndex(prev => prev + 1);
+      setShouldScroll(true);
     }
     if (isRightSwipe && currentLetterIndex > 0) {
       setCurrentLetterIndex(prev => prev - 1);
+      setShouldScroll(true);
     }
 
     setTouchStart(null);
@@ -65,12 +72,14 @@ const LetterLearningApp = () => {
   const nextLetter = () => {
     if (currentLetterIndex < alphabet.length - 1) {
       setCurrentLetterIndex(prev => prev + 1);
+      setShouldScroll(true);
     }
   };
 
   const previousLetter = () => {
     if (currentLetterIndex > 0) {
       setCurrentLetterIndex(prev => prev - 1);
+      setShouldScroll(true);
     }
   };
 
@@ -81,10 +90,14 @@ const LetterLearningApp = () => {
     }
   };
 
+  const handleLetterClick = (index) => {
+    setCurrentLetterIndex(index);
+    setShouldScroll(true);
+  };
+
+  // Updated scroll effect to handle edge cases
   React.useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else if (letterScrollRef.current) {
+    if (!isInitialMount.current && shouldScroll && letterScrollRef.current) {
       const container = letterScrollRef.current;
       const button = container.children[currentLetterIndex];
       
@@ -92,15 +105,37 @@ const LetterLearningApp = () => {
         const buttonLeft = button.offsetLeft;
         const containerWidth = container.offsetWidth;
         const buttonWidth = button.offsetWidth;
-        const scrollLeft = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+        const maxScroll = container.scrollWidth - containerWidth;
+        
+        let scrollLeft = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+        
+        // Prevent scrolling past the edges
+        if (scrollLeft < 0) {
+          scrollLeft = 0;
+        } else if (scrollLeft > maxScroll) {
+          scrollLeft = maxScroll;
+        }
+        
+        // Don't scroll if it's the first few or last few items and we're at the edge
+        if ((currentLetterIndex < 3 && container.scrollLeft === 0) || 
+            (currentLetterIndex > alphabet.length - 4 && container.scrollLeft === maxScroll)) {
+          setShouldScroll(false);
+          return;
+        }
         
         container.scrollTo({
           left: scrollLeft,
           behavior: 'smooth'
         });
       }
+      setShouldScroll(false);
     }
-  }, [currentLetterIndex]);
+    isInitialMount.current = false;
+  }, [currentLetterIndex, shouldScroll]);
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <div className="fixed inset-0 bg-gray-50 flex flex-col">
@@ -146,7 +181,6 @@ const LetterLearningApp = () => {
 
       <div className="flex-none bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 pt-4 pb-5">
-          {/* Mix button */}
           <div className="flex justify-center mb-4">
             <button
               onClick={handleMix}
@@ -157,7 +191,6 @@ const LetterLearningApp = () => {
             </button>
           </div>
 
-          {/* Color selection with responsive sizing */}
           <div className="overflow-x-hidden px-2">
             <div className="flex justify-center gap-2 sm:gap-3 mb-4">
               {colors.map((color) => (
@@ -188,7 +221,8 @@ const LetterLearningApp = () => {
 
             <div 
               ref={letterScrollRef}
-              className="overflow-x-auto scrollbar-hide mx-auto lg:mx-12 w-full"
+              className="overflow-x-auto overflow-y-hidden scrollbar-hide mx-auto lg:mx-12 w-full"
+              onWheel={handleWheel}
             >
               <div 
                 className="flex gap-2 min-w-min sm:justify-between px-4"
@@ -197,7 +231,7 @@ const LetterLearningApp = () => {
                 {alphabet.map((letter, index) => (
                   <button
                     key={letter}
-                    onClick={() => setCurrentLetterIndex(index)}
+                    onClick={() => handleLetterClick(index)}
                     className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-xl sm:text-2xl font-bold shadow-sm transition-all duration-200 flex items-center justify-center
                       ${currentLetterIndex === index 
                         ? 'bg-blue-500 text-white scale-105 shadow-md' 
