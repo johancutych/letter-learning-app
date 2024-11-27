@@ -1,6 +1,6 @@
 // Basic shapes that babies can learn
 const shapes = [
-  '■', '●', '▲', '★', '♥', '◆', '▬', '⬟'
+  '■', '●', '▲', '★', '♥', '◆', '▬', '⬟', '☁︎', '☀︎', '✼'
 ];
 
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
