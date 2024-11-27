@@ -95,39 +95,43 @@ const LearnPage = ({ items, currentIndex, setCurrentIndex, selectedColor, setSel
             />
           </div>
 
-          <div className="relative flex items-center max-w-full">
-            <button 
-              onClick={() => scrollItems(-1)}
-              className="hidden lg:block flex-none bg-blue-500 hover:bg-blue-600 text-white rounded-xl p-2 shadow-[0_4px_0_rgb(37,99,235)] active:translate-y-1 active:shadow-none transition-all duration-150 z-10"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+          <div className="relative flex items-center w-full">
+  <button 
+    onClick={() => scrollItems(-1)}
+    className="hidden lg:block flex-none bg-blue-500 hover:bg-blue-600 text-white rounded-xl p-2 shadow-[0_4px_0_rgb(37,99,235)] active:translate-y-1 active:shadow-none transition-all duration-150 z-10"
+  >
+    <ChevronLeft className="w-6 h-6" />
+  </button>
 
-            <div ref={scrollRef} className="overflow-x-auto scrollbar-hide mx-4 w-full">
-              <div className="flex gap-3 min-w-min justify-center px-4 py-2 overflow-visible">
-                {items.map((item, index) => (
-                  <button
-                    key={item}
-                    onClick={() => {
-                      setCurrentIndex(index);
-                      setShouldScroll(true);
-                    }}
-                    className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-xl sm:text-2xl font-bold bg-blue-500 text-white transition-all duration-200 flex items-center justify-center shadow-[0_4px_0_rgb(37,99,235)] hover:bg-blue-600 active:translate-y-1 active:shadow-none
-                      ${currentIndex === index ? 'bg-blue-600 -translate-y-1 shadow-none' : ''}`}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
+  <div className="relative w-full">
+ <div ref={scrollRef} className="overflow-x-auto scrollbar-hide w-full">
+   <div className="flex gap-3 min-w-min py-2 relative">
+     {items.map((item, index) => (
+       <button
+         key={item}
+         onClick={() => {
+           setCurrentIndex(index);
+           setShouldScroll(true);
+         }}
+         className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-xl sm:text-2xl font-bold bg-blue-500 text-white transition-all duration-200 flex items-center justify-center shadow-[0_4px_0_rgb(37,99,235)] hover:bg-blue-600 active:translate-y-1 active:shadow-none
+           ${currentIndex === index ? 'bg-blue-600 -translate-y-1 shadow-none' : ''}`}
+       >
+         {item}
+       </button>
+     ))}
+   </div>
+ </div>
+ <div className="absolute inset-y-0 -left-1 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+ <div className="absolute inset-y-0 -right-1 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+</div>
 
-            <button 
-              onClick={() => scrollItems(1)}
-              className="hidden lg:block flex-none bg-blue-500 hover:bg-blue-600 text-white rounded-xl p-2 shadow-[0_4px_0_rgb(37,99,235)] active:translate-y-1 active:shadow-none transition-all duration-150 z-10"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
+  <button 
+    onClick={() => scrollItems(1)}
+    className="hidden lg:block flex-none bg-blue-500 hover:bg-blue-600 text-white rounded-xl p-2 shadow-[0_4px_0_rgb(37,99,235)] active:translate-y-1 active:shadow-none transition-all duration-150 z-10"
+  >
+    <ChevronRight className="w-6 h-6" />
+  </button>
+</div>
         </div>
       </div>
     </>
