@@ -20,7 +20,6 @@ const colors = [
   '#C57AE6',   // purple
   '#FF7E0F',   // orange
   '#8B4513',   // brown
-  '#FFFFFF',   // white
 ];
 
 export { shapes, letters, numbers, colors };
