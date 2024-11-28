@@ -32,13 +32,19 @@ const App = () => {
     };
   }, []);
 
+  // Reset index when changing pages
+  useEffect(() => {
+    setIndices(prev => ({ ...prev, [currentPage]: 0 }));
+  }, [currentPage]);
+
   const getPageContent = () => {
+    // Ensure we return a new array each time to avoid state mixing
     switch(currentPage) {
-      case 'letters': return letters;
-      case 'numbers': return numbers;
-      case 'shapes': return shapes;
-      case 'animals': return animals;
-      default: return letters;
+      case 'letters': return [...letters];
+      case 'numbers': return [...numbers];
+      case 'shapes': return [...shapes];
+      case 'animals': return [...animals];
+      default: return [...letters];
     }
   };
 
@@ -58,14 +64,15 @@ const App = () => {
         currentPage={currentPage}
       />
 
-      <LearnPage
-        items={getPageContent()}
-        currentIndex={indices[currentPage]}
-        setCurrentIndex={(index) => setIndices(prev => ({ ...prev, [currentPage]: index }))}
-        selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
-        colors={colors}
-      />
+<LearnPage
+  items={getPageContent()}
+  currentIndex={indices[currentPage]}
+  setCurrentIndex={(index) => setIndices(prev => ({ ...prev, [currentPage]: index }))}
+  selectedColor={selectedColor}
+  setSelectedColor={setSelectedColor}
+  colors={colors}
+  pageType={currentPage}  // Add this new prop
+/>
     </div>
   );
 };

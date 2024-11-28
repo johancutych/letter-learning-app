@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Shuffle } from 'lucide-react';
 import ColorPicker from './ColorPicker';
+import { animals } from '../data/content'; 
 
-const LearnPage = ({ items, currentIndex, setCurrentIndex, selectedColor, setSelectedColor, colors }) => {
+const LearnPage = ({ 
+  items, 
+  currentIndex, 
+  setCurrentIndex, 
+  selectedColor, 
+  setSelectedColor, 
+  colors,
+  pageType  // Add this to props
+}) => {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const [shouldScroll, setShouldScroll] = useState(false);
@@ -71,7 +80,9 @@ const LearnPage = ({ items, currentIndex, setCurrentIndex, selectedColor, setSel
           className="font-bold transition-colors duration-300 select-none leading-none"
           style={{ 
             color: selectedColor,
-            fontSize: 'min(85vw, 65vh)',
+            fontSize: pageType === 'animals' 
+              ? 'min(65vw, 45vh)'  // smaller size for animals
+              : 'min(85vw, 65vh)', // original size for other content
           }}
         >
           {items[currentIndex]}
@@ -113,8 +124,8 @@ const LearnPage = ({ items, currentIndex, setCurrentIndex, selectedColor, setSel
             setCurrentIndex(index);
             setShouldScroll(true);
           }}
-          className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-xl sm:text-2xl font-bold bg-grey-200 text-black transition-all duration-200 flex items-center justify-center shadow-[0_4px_0_#d1d5db] hover:bg-grey-00 active:translate-y-1 active:shadow-none
-            ${currentIndex === index ? 'bg-grey-400 -translate-y-1 shadow-none' : ''}`}
+          className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-xl sm:text-2xl font-bold bg-gray-100 text-black transition-all duration-200 flex items-center justify-center shadow-[0_4px_0_#d1d5db] hover:bg-gray-00 active:translate-y-1 active:shadow-none
+            ${currentIndex === index ? 'bg-gray-300 -translate-y-1 shadow-none' : ''}`}
         >
           {item}
         </button>
