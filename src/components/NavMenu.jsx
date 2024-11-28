@@ -21,7 +21,7 @@ const NavMenu = ({ isOpen, onClose, onPageSelect, currentPage }) => (
           </button>
         </div>
         <nav className="space-y-3">
-          {['Letters', 'Numbers', 'Shapes'].map(page => (
+          {['Letters', 'Numbers', 'Shapes', 'Animals'].map(page => (
             <button 
               key={page}
               onClick={() => { 

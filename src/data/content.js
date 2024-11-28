@@ -3,6 +3,10 @@ const shapes = [
   '■', '●', '▲', '★', '♥', '◆', '▬', '⬟', '☁︎', '☀︎', '✼'
 ];
 
+const animals = [
+  '🐕', '🐈', '🐍', '🐄', '🐊', '🐁', '🐖', '🐎', '🐝', '🐒', '🐸'
+];
+
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const numbers = Array.from({ length: 20 }, (_, i) => (i + 1).toString());
 
@@ -22,4 +26,4 @@ const colors = [
   '#8B4513',   // brown
 ];
 
-export { shapes, letters, numbers, colors };
+export { shapes, letters, numbers, colors, animals };

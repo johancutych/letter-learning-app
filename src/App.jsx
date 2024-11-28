@@ -3,7 +3,7 @@ import { Menu } from 'lucide-react';
 import NavMenu from './components/NavMenu';
 import LearnPage from './components/LearnPage';
 import ColorPicker from './components/ColorPicker';
-import { letters, numbers, shapes, colors } from './data/content';
+import { letters, numbers, shapes, animals, colors } from './data/content';
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('letters');
@@ -12,7 +12,8 @@ const App = () => {
   const [indices, setIndices] = useState({
     letters: 0,
     numbers: 0,
-    shapes: 0
+    shapes: 0,
+    animals: 0
   });
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const App = () => {
       case 'letters': return letters;
       case 'numbers': return numbers;
       case 'shapes': return shapes;
+      case 'animals': return animals;
       default: return letters;
     }
   };

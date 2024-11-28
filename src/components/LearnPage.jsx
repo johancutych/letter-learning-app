@@ -113,8 +113,8 @@ const LearnPage = ({ items, currentIndex, setCurrentIndex, selectedColor, setSel
             setCurrentIndex(index);
             setShouldScroll(true);
           }}
-          className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-xl sm:text-2xl font-bold bg-blue-500 text-white transition-all duration-200 flex items-center justify-center shadow-[0_4px_0_rgb(37,99,235)] hover:bg-blue-600 active:translate-y-1 active:shadow-none
-            ${currentIndex === index ? 'bg-blue-600 -translate-y-1 shadow-none' : ''}`}
+          className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-xl sm:text-2xl font-bold bg-grey-200 text-black transition-all duration-200 flex items-center justify-center shadow-[0_4px_0_#d1d5db] hover:bg-grey-00 active:translate-y-1 active:shadow-none
+            ${currentIndex === index ? 'bg-grey-400 -translate-y-1 shadow-none' : ''}`}
         >
           {item}
         </button>
